@@ -1,9 +1,8 @@
-# Data Ingestion · 数据接入
+# 数据接入
 
 > 批流一体的数据接入工作：把日志、广告、Kafka、API 等多源数据稳定、可治理地送入数仓。
-> Batch & streaming ingestion work that moves logs, ads, Kafka streams and APIs into the warehouse reliably and governably.
 
-## 概览 Overview
+## 概览
 
 这部分工作围绕一条固定的离线入库链路展开，核心是「先落地、后入库」两段解耦：
 
@@ -17,15 +16,12 @@ flowchart LR
     Hive --> Down["下游查询 / 报表"]
 ```
 
-
-
 - **实时落地服务**：从 Kafka 消费原始日志，可靠地落地成 HDFS 文件——只负责落盘，不做建模。
 - **新批式导入框架**：定时读取这些 HDFS 文件，做分解、转换、schema 演进与建表，写入 Hive。
 
 这样把「实时落盘」与「离线建模/治理」解耦：实时侧保证数据不丢、先落地；离线侧保证数据建好模、可查询。广告接入与并发指标采集是这条主链路之外的旁路数据源。
 
 主要项目：
-
 
 | 项目      | 技术栈              | 职责                             |
 | ------- | ---------------- | ------------------------------ |
@@ -34,7 +30,6 @@ flowchart LR
 | 广告数据接入  | Python + Airflow | 多广告平台数据接入                      |
 | 实时落地服务  | Scala + Spark    | Kafka → HDFS 实时落地（新批式导入框架上游）   |
 | 并发指标采集器 | Python           | 采集 Prometheus 的 CCU 指标 → Kafka |
-
 
 ## 老批式导入框架
 
@@ -71,8 +66,8 @@ flowchart LR
 功能逻辑：
 
 1. **数据源处理**：读取 HDFS JSON 日志，清洗 `NAN` / `INF` 等非法字符串。
-2. **批数据分解（decompose）**：按配置规则把一个 batch 拆成多个 keyed DataFrame，key 写入文件名与路径。
-3. **转换流水线（transform DAG）**：每个 keyed DataFrame 走一条 DAG，逐节点按 key 判断是否应用该操作。
+2. **批数据分解**：按配置规则把一个 batch 拆成多个 keyed DataFrame，key 写入文件名与路径。
+3. **转换流水线**：每个 keyed DataFrame 走一条 DAG，逐节点按 key 判断是否应用该操作。
 4. **Schema 检测与演进**：从 JSON 推断或读配置得到 schema，与 Hive MetaStore 比对，触发「直接写 / 更新表 / 告警」三种策略。
 5. **增量导入**：只对新增文件跑 pipeline，追加到已有分区。
 6. **坏数据存留**：原始 JSON 统一落 HDFS 路径，便于小文件合并与错误追踪，分区修复后清理。
@@ -103,11 +98,10 @@ flowchart LR
 
 Python 采集器：定时从 Prometheus 采集 CCU（并发用户数）指标，写入 Kafka。按「游戏 + 区域」拆分为多个采集器，并自动生成 Airflow DAG。
 
-## 我的角色 My Role
+## 我的角色
 
 - 老批式导入框架：最早（2022 起）参与的老项目，负责大量修数（数据修复）、schema 不一致排查与新增游戏/事件接入（主要贡献者之一）。
 - 新批式导入框架：创始贡献者之一——仓库建立初期即定下配置驱动的框架方向（转换器 / 分发器 / 日志配置接口 + YAML 配置 + schema 演进），并定位了类型转换导致的 schema 不一致问题（扫描历史分区）；此后陆续实现数据比对、坏数据存留、告警、数据修复与 Airflow 集成，并持续接入各数据源。
 - 广告数据接入：核心开发者（~160 提交），TikTok / Google / Facebook / SensorTower / AppsFlyer 的接入与功能开发。
 - 实时落地服务（新批式导入框架上游）：主要贡献者（~45 提交），含时间戳回放补数工具。
 - 并发指标采集器：唯一设计开发者——从 Prometheus 采集 CCU 指标写入 Kafka，含各游戏/区域的采集器与写入器。
-

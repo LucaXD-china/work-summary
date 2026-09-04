@@ -1,9 +1,8 @@
-# ScyllaDB Storage · ScyllaDB 存储运维
+# ScyllaDB 存储运维
 
 > 部署并运维多个 ScyllaDB 集群，覆盖常规节点运维、官方监控接入与离线安装。
-> Deployed and operated multiple ScyllaDB clusters: routine node ops, official monitoring, and offline install.
 
-## 概览 Overview
+## 概览
 
 ScyllaDB 这块以**部署与运维**为主，而非大量额外开发：
 
@@ -24,7 +23,7 @@ ScyllaDB 这块以**部署与运维**为主，而非大量额外开发：
 - **离线安装**：在无法访问官方 apt 源的环境，通过自带 deb 包安装 ScyllaDB。
 - **Flink 连接器**：提供 Flink SQL 写 ScyllaDB 的连接器，让流任务用 SQL 直接落地。
 
-## 我的角色 My Role
+## 我的角色
 
 - 部署并运维多个 ScyllaDB 集群（新加坡 / 美国多机房）。
 - 搭建官方 ScyllaDB Monitoring 监控工具。

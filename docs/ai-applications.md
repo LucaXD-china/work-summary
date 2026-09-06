@@ -13,6 +13,8 @@ AI 数据应用由两大支柱组成，共享同一条原则——**把 AI 时�
 
 # 第一部分 · AI 查询体系
 
+> 设计思考另有两篇独立文章：[Agent Harness：如何设计 AI Query 架构](../agent-harness-ai-query.zh-CN.md)（架构与职责分离）、[Semantic Federation：一种组合语义层构建方式](../semantic-federation-ai-query.zh-CN.md)（语义层构建的续篇）。
+
 ## 目的与边界
 
 这里的「AI 查询」指一组面向 Codex、Cursor 或自定义 MCP 客户端的**安全数据查询工具与使用约束**，不是一个独立实现的 Agent。工具链由三类能力组成：

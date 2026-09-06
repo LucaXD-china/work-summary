@@ -49,6 +49,11 @@
 - [ScyllaDB 存储运维](docs/storage.md) — 多集群部署运维、官方监控、离线安装、Flink 连接器
 - [AI 数据应用](docs/ai-applications.md) — AI 查询体系（查询网关 + 元数据与策略服务 + 语义层技能包）+ 报告交付与数据可视化平台
 
+### AI Query 设计文章
+
+- [Agent Harness：如何设计 AI Query 架构](agent-harness-ai-query.zh-CN.md) — 上篇：职责分离的查询网关 + 数据事实服务 + 语义层
+- [Semantic Federation：一种组合语义层构建方式](semantic-federation-ai-query.zh-CN.md) — 续篇：认证/探索双层语义层的拆分、路由与演进
+
 ---
 
 ## 🛠 技术栈
